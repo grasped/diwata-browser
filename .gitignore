@@ -60,3 +60,5 @@ pylintrc
 pb_tool.cfg
 help
 scripts
+README.html
+README.txt

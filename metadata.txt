@@ -17,7 +17,7 @@ repository=https://gitlab.com/cnpante/diwata-browser
 # End of mandatory metadata
 
 # Recommended items:
-
+license=https://data.phl-microsat.upd.edu.ph/license/
 hasProcessingProvider=no
 # Uncomment the following line and add your changelog:
 # changelog=

@@ -51,22 +51,11 @@ class LoadItem(QThread):
             self.thumbnail_signal.emit(pixmap)
             return
 
-        thumb_basename = os.path.basename(thumbnail)
-        save_to = os.path.join(self.download_path, thumb_basename)
+        pixmap = QPixmap()
+        pixmap.loadFromData(requests.get(thumbnail).content)
 
-        if os.path.exists(save_to):
-            pixmap = QPixmap(save_to)
-            self.thumbnail_signal.emit(pixmap)
-            return
-        else:
-            response = requests.get(thumbnail, allow_redirects=True)
-
-            with open(save_to, 'wb') as f:
-                f.write(response.content)
-
-            pixmap = QPixmap(save_to)
-            self.thumbnail_signal.emit(pixmap)
-            return
+        self.thumbnail_signal.emit(pixmap)
+        return
 
     def get_thumbnail(self, item):
         for asset in item.get_assets():

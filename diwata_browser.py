@@ -173,22 +173,10 @@ class DiwataBrowser:
 
 
     def load_collection(self):
-        if not self.download_path:
-            self.iface.messageBar().pushMessage("Diwata Browser", 
-                "Set a valid download path.",
-                level=1)
-            return
-        elif not os.path.isdir(self.download_path):
-            self.iface.messageBar().pushMessage("Diwata Browser", 
-                "Set a valid download path.",
-                level=1)
-            return
-
         self.dlg.tableWidget.setRowCount(0)
         self.dlg.items_listWidget.clear()
         start_time = self.dlg.temporal_start_dateTime.dateTime().toUTC().toString(Qt.ISODate)
         end_time = self.dlg.temporal_end_dateTime.dateTime().toUTC().toString(Qt.ISODate)
-        self.debug_message(start_time)
 
         self.collection = LoadCollection(start_time, end_time)
         self.collection.start()
@@ -223,7 +211,6 @@ class DiwataBrowser:
         self.item = LoadItem(self.download_path, item_id)
         self.item.start()
         self.item.started.connect(self.loading_item)
-        self.item.debugger_signal.connect(self.debug_message)
         self.item.item_info.connect(self.display_item_info)
         self.item.thumbnail_signal.connect(self.display_thumbnail)
         self.item.footprint_signal.connect(self.draw_footprint)
@@ -269,7 +256,6 @@ class DiwataBrowser:
 
     def display_item_info(self, item):
         self.selected_item = item
-        self.dlg.info_textEdit.setText(item.id)
         self.dlg.tableWidget.setColumnCount(2)
         self.dlg.tableWidget.setRowCount(8)
 
@@ -308,7 +294,7 @@ class DiwataBrowser:
 
     def display_thumbnail(self, pixmap):
         self.selected_pixmap = pixmap
-        pixmap = pixmap.scaled(256, 256,
+        pixmap = pixmap.scaled(300, 300,
             #self.dlg.image_label.size().width(),
             #self.dlg.image_label.size().height(), 
             aspectRatioMode=Qt.KeepAspectRatio,
@@ -316,11 +302,10 @@ class DiwataBrowser:
 
         self.dlg.image_label.setPixmap(pixmap)
 
-    def resizeEvent(self, event):
+    def resize_event(self):
         if self.selected_pixmap is None:
             return
-        self.dlg.info_textEdit.setText("Resizing...")
-        self.set_preview(self.selected_pixmap)
+        self.set_preview()
 
     def set_preview(self):
         if self.selected_pixmap is None:
@@ -353,7 +338,6 @@ class DiwataBrowser:
         self.raster.raster_downloaded.connect(self.display_to_qgis)
 
     def display_to_qgis(self, path, basename):
-        self.debug_message("Im here!")
         rlayer = QgsRasterLayer(path, basename)
         if not rlayer.isValid():
             self.iface.messageBar().pushMessage("Diwata Browser", 
@@ -386,6 +370,7 @@ class DiwataBrowser:
             self.rubberband.hide()
             self.set_datetime()
             self.dlg.closed_signal.connect(self.close_event)
+            #self.dlg.resize_signal.connect(self.resize_event)
             self.dlg.buttonBox.rejected.connect(self.close_event)
             self.dlg.search_button.clicked.connect(self.load_collection)
             self.dlg.items_listWidget.currentItemChanged.connect(self.load_item)

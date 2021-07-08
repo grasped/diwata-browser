@@ -35,6 +35,7 @@ FORM_CLASS, _ = uic.loadUiType(os.path.join(
 
 class DiwataBrowserDialog(QtWidgets.QDialog, FORM_CLASS):
     closed_signal = pyqtSignal()
+    resize_signal = pyqtSignal()
 
     def __init__(self, parent=None):
         """Constructor."""
@@ -49,3 +50,7 @@ class DiwataBrowserDialog(QtWidgets.QDialog, FORM_CLASS):
     def closeEvent(self, event):
         super(DiwataBrowserDialog, self).closeEvent(event)
         self.closed_signal.emit()
+
+    def resizeEvent(self, event):
+        super(DiwataBrowserDialog, self).resizeEvent(event)
+        self.resize_signal.emit()

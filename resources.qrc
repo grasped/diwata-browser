@@ -1,5 +1,0 @@
-<RCC>
-    <qresource prefix="/plugins/diwata_browser" >
-        <file>icon.png</file>
-    </qresource>
-</RCC>

@@ -1,7 +1,8 @@
 from typing import Any, Union
 
-from qgis.core import (QgsCoordinateReferenceSystem, QgsProject,
-                       QgsCoordinateTransform)
+from qgis.core import QgsCoordinateReferenceSystem
+from qgis.core import QgsProject
+from qgis.core import QgsCoordinateTransform
 
 EasyCrs = Union[int, QgsCoordinateReferenceSystem]
 

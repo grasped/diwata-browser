@@ -27,30 +27,33 @@ import os.path
 import requests
 from .crs import crs4326, get_project_crs, transform
 
-from qgis.PyQt.QtCore import (QSettings, 
-    QTranslator, 
-    QCoreApplication,
-    QUrl, 
-    QUrlQuery, 
-    Qt,
-    QDateTime)
+from qgis.PyQt.QtCore import QSettings
+from qgis.PyQt.QtCore import QTranslator
+from qgis.PyQt.QtCore import QCoreApplication
+from qgis.PyQt.QtCore import QUrl
+from qgis.PyQt.QtCore import QUrlQuery
+from qgis.PyQt.QtCore import Qt
+from qgis.PyQt.QtCore import QDateTime
+
 from qgis.PyQt.QtGui import QIcon, QImage, QPixmap, QColor
-from qgis.PyQt.QtWidgets import (QAction, 
-    QMessageBox, 
-    QTableWidgetItem, 
-    QHeaderView, 
-    QFileDialog)
+
+from qgis.PyQt.QtWidgets import QAction
+from qgis.PyQt.QtWidgets import QMessageBox
+from qgis.PyQt.QtWidgets import QTableWidgetItem
+from qgis.PyQt.QtWidgets import QHeaderView
+from qgis.PyQt.QtWidgets import QFileDialog
+
 from qgis.PyQt.QtNetwork import QNetworkRequest
-from qgis.core import (QgsProject, 
-    QgsNetworkAccessManager, 
-    QgsNetworkReplyContent,
-    QgsVectorLayer,
-    QgsRasterLayer,
-    QgsWkbTypes,
-    QgsPointXY,
-    QgsGeometry,
-    QgsCoordinateReferenceSystem,
-    QgsReferencedRectangle)
+
+from qgis.core import QgsProject
+from qgis.core import QgsNetworkAccessManager
+from qgis.core import QgsNetworkReplyContent
+from qgis.core import QgsVectorLayer
+from qgis.core import QgsRasterLayer
+from qgis.core import QgsPointXY
+from qgis.core import QgsGeometry
+from qgis.core import QgsCoordinateReferenceSystem
+from qgis.core import QgsReferencedRectangle
 
 from qgis.gui import QgsRubberBand
 
@@ -68,13 +71,6 @@ class DiwataBrowser:
     """QGIS Plugin Implementation."""
 
     def __init__(self, iface):
-        """Constructor.
-
-        :param iface: An interface instance that will be passed to this class
-            which provides the hook by which you can manipulate the QGIS
-            application at run time.
-        :type iface: QgsInterface
-        """
         # Save reference to the QGIS interface
         self.iface = iface
         # initialize plugin directory
@@ -93,7 +89,7 @@ class DiwataBrowser:
 
         # Declare instance attributes
         self.actions = []
-        self.menu = self.tr(u'&Diwata STAC Browser')
+        self.menu = self.tr(u'&Diwata Browser')
 
         # Check if plugin was started the first time in current QGIS session
         # Must be set in initGui() to survive plugin reloads
@@ -107,17 +103,6 @@ class DiwataBrowser:
 
     # noinspection PyMethodMayBeStatic
     def tr(self, message):
-        """Get the translation for a string using Qt translation API.
-
-        We implement this ourselves since we do not inherit QObject.
-
-        :param message: String for translation.
-        :type message: str, QString
-
-        :returns: Translated version of message.
-        :rtype: QString
-        """
-        # noinspection PyTypeChecker,PyArgumentList,PyCallByClass
         return QCoreApplication.translate('DiwataBrowser', message)
 
 
@@ -132,44 +117,6 @@ class DiwataBrowser:
         status_tip=None,
         whats_this=None,
         parent=None):
-        """Add a toolbar icon to the toolbar.
-
-        :param icon_path: Path to the icon for this action. Can be a resource
-            path (e.g. ':/plugins/foo/bar.png') or a normal file system path.
-        :type icon_path: str
-
-        :param text: Text that should be shown in menu items for this action.
-        :type text: str
-
-        :param callback: Function to be called when the action is triggered.
-        :type callback: function
-
-        :param enabled_flag: A flag indicating if the action should be enabled
-            by default. Defaults to True.
-        :type enabled_flag: bool
-
-        :param add_to_menu: Flag indicating whether the action should also
-            be added to the menu. Defaults to True.
-        :type add_to_menu: bool
-
-        :param add_to_toolbar: Flag indicating whether the action should also
-            be added to the toolbar. Defaults to True.
-        :type add_to_toolbar: bool
-
-        :param status_tip: Optional text to show in a popup when mouse pointer
-            hovers over the action.
-        :type status_tip: str
-
-        :param parent: Parent widget for the new action. Defaults None.
-        :type parent: QWidget
-
-        :param whats_this: Optional text to show in the status bar when the
-            mouse pointer hovers over the action.
-
-        :returns: The action that was created. Note that the action is also
-            added to self.actions list.
-        :rtype: QAction
-        """
 
         icon = QIcon(icon_path)
         action = QAction(icon, text, parent)
@@ -202,7 +149,7 @@ class DiwataBrowser:
         icon_path = os.path.join(current_dir, 'icon.png')
         self.add_action(
             icon_path,
-            text=self.tr(u'Diwata STAC Browser'),
+            text=self.tr(u'Diwata Browser'),
             callback=self.run,
             parent=self.iface.mainWindow())
 
@@ -214,7 +161,7 @@ class DiwataBrowser:
         """Removes the plugin menu item and icon from QGIS GUI."""
         for action in self.actions:
             self.iface.removePluginMenu(
-                self.tr(u'&Diwata STAC Browser'),
+                self.tr(u'&Diwata Browser'),
                 action)
             self.iface.removeToolBarIcon(action)
 
@@ -282,7 +229,6 @@ class DiwataBrowser:
         self.item.footprint_signal.connect(self.draw_footprint)
 
     def draw_footprint(self, item):
-        #self.rubberband.reset(QgsWkbTypes.PolygonGeometry)
         self.rubberband.hide()
 
         if not item.geometry:
@@ -434,17 +380,11 @@ class DiwataBrowser:
 
 
     def run(self):
-        """Run method that performs all the real work"""
-
-        # Create the dialog with elements (after translation) and keep reference
-        # Only create GUI ONCE in callback, so that it will only load when the plugin is started
         if self.first_start == True:
             self.first_start = False
             self.dlg = DiwataBrowserDialog()
             self.rubberband.hide()
             self.set_datetime()
-            #self.dlg.closeEvent = functools.partial(self.close_event)
-            #self.dlg.closeEvent.connect(self.load_collection)
             self.dlg.closed_signal.connect(self.close_event)
             self.dlg.buttonBox.rejected.connect(self.close_event)
             self.dlg.search_button.clicked.connect(self.load_collection)
@@ -453,17 +393,11 @@ class DiwataBrowser:
             self.dlg.load_raster_button.clicked.connect(self.load_raster)
 
 
-        # show the dialog
         project = QgsProject.instance()
         self.dlg.show()
-        # Run the dialog event loop
         result = self.dlg.exec_()
-        # See if OK was pressed
         if result:
-            # Do something useful here - delete the line containing pass and
             self.rubberband.hide()
-            
-
             pass
 
 

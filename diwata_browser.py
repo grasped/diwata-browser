@@ -178,7 +178,20 @@ class DiwataBrowser:
         start_time = self.dlg.temporal_start_dateTime.dateTime().toUTC().toString(Qt.ISODate)
         end_time = self.dlg.temporal_end_dateTime.dateTime().toUTC().toString(Qt.ISODate)
 
-        self.collection = LoadCollection(start_time, end_time)
+        bbox_combobox = self.dlg.spatial_extent_comboBox.currentText()
+        if bbox_combobox == 'None':
+            bbox = None
+        elif bbox_combobox == 'Layer Extent':
+            layer = self.iface.mapCanvas()
+            extent = layer.extent()
+            xmin = extent.xMinimum()
+            xmax = extent.xMaximum()
+            ymin = extent.yMinimum()
+            ymax = extent.yMaximum()
+            coords = "%f,%f,%f,%f" %(xmin, ymin, xmax, ymax)
+            bbox = [xmin, ymin, xmax, ymax]
+
+        self.collection = LoadCollection(start_time, end_time, bbox)
         self.collection.start()
         self.collection.started.connect(self.loading_collection)
         self.collection.error_signal.connect(self.loading_collection_error)
@@ -191,9 +204,10 @@ class DiwataBrowser:
     def loaded_collection(self):
         self.dlg.image_label.setText("")
 
-    def loading_collection_error(self):
+    def loading_collection_error(self, message):
         self.iface.messageBar().pushMessage("Diwata Browser", 
             "Error connecting to collection.",
+            message,
             level=1)
 
     def display_items(self, items):

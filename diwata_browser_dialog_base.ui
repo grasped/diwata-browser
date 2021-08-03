@@ -27,6 +27,55 @@
        <string>General</string>
       </attribute>
       <layout class="QGridLayout" name="gridLayout_2">
+       <item row="5" column="1" colspan="3">
+        <spacer name="horizontalSpacer_4">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>754</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item row="3" column="1" colspan="4">
+        <widget class="QTableWidget" name="tableWidget">
+         <property name="maximumSize">
+          <size>
+           <width>16777215</width>
+           <height>230</height>
+          </size>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="1" rowspan="3" colspan="4">
+        <widget class="QLabel" name="image_label">
+         <property name="text">
+          <string/>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item row="4" column="2">
+        <widget class="QLineEdit" name="download_lineEdit"/>
+       </item>
+       <item row="4" column="1">
+        <widget class="QLabel" name="download_label">
+         <property name="maximumSize">
+          <size>
+           <width>81</width>
+           <height>16777215</height>
+          </size>
+         </property>
+         <property name="text">
+          <string>Download path:</string>
+         </property>
+        </widget>
+       </item>
        <item row="5" column="4">
         <widget class="QPushButton" name="load_raster_button">
          <property name="maximumSize">
@@ -40,18 +89,18 @@
          </property>
         </widget>
        </item>
-       <item row="5" column="1" colspan="3">
-        <spacer name="horizontalSpacer_4">
-         <property name="orientation">
-          <enum>Qt::Horizontal</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
+       <item row="4" column="4">
+        <widget class="QPushButton" name="download_browseButton">
+         <property name="maximumSize">
           <size>
-           <width>754</width>
-           <height>20</height>
+           <width>31</width>
+           <height>16777215</height>
           </size>
          </property>
-        </spacer>
+         <property name="text">
+          <string>...</string>
+         </property>
+        </widget>
        </item>
        <item row="0" column="0">
         <widget class="QGroupBox" name="groupBox_2">
@@ -99,7 +148,28 @@
             </property>
            </widget>
           </item>
+          <item row="3" column="0">
+           <widget class="QLabel" name="spatial_extent_label">
+            <property name="text">
+             <string>Spatial Extent</string>
+            </property>
+           </widget>
+          </item>
           <item row="3" column="1">
+           <widget class="QComboBox" name="spatial_extent_comboBox">
+            <item>
+             <property name="text">
+              <string>None</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Layer Extent</string>
+             </property>
+            </item>
+           </widget>
+          </item>
+          <item row="4" column="1">
            <widget class="QPushButton" name="search_button">
             <property name="text">
              <string>Search</string>
@@ -125,55 +195,6 @@
          </property>
          <property name="alternatingRowColors">
           <bool>true</bool>
-         </property>
-        </widget>
-       </item>
-       <item row="4" column="2">
-        <widget class="QLineEdit" name="download_lineEdit"/>
-       </item>
-       <item row="4" column="1">
-        <widget class="QLabel" name="download_label">
-         <property name="maximumSize">
-          <size>
-           <width>81</width>
-           <height>16777215</height>
-          </size>
-         </property>
-         <property name="text">
-          <string>Download path:</string>
-         </property>
-        </widget>
-       </item>
-       <item row="4" column="4">
-        <widget class="QPushButton" name="download_browseButton">
-         <property name="maximumSize">
-          <size>
-           <width>31</width>
-           <height>16777215</height>
-          </size>
-         </property>
-         <property name="text">
-          <string>...</string>
-         </property>
-        </widget>
-       </item>
-       <item row="3" column="1" colspan="4">
-        <widget class="QTableWidget" name="tableWidget">
-         <property name="maximumSize">
-          <size>
-           <width>16777215</width>
-           <height>230</height>
-          </size>
-         </property>
-        </widget>
-       </item>
-       <item row="0" column="1" rowspan="3" colspan="4">
-        <widget class="QLabel" name="image_label">
-         <property name="text">
-          <string/>
-         </property>
-         <property name="alignment">
-          <set>Qt::AlignCenter</set>
          </property>
         </widget>
        </item>

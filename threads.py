@@ -69,22 +69,26 @@ class LoadCollection(QThread):
     listed_items_signal = pyqtSignal(list)
     error_signal = pyqtSignal()
 
-    def __init__(self, start_time=None, end_time=None):
+    def __init__(self, start_time=None, end_time=None, bbox=None):
         QThread.__init__(self)
 
         self.start_time = start_time
         self.end_time = end_time
+        self.bbox = bbox
 
     def run(self):
+        headers = {'content-type': 'application/json'}
         payload = {'datetime': '{}/{}'.format(
             self.start_time, 
             self.end_time)
         }
-        url = "{url}/stac_management/stac/collections/diwata-2-smi/items".format(
-            url=URL)
+        if self.bbox is not None:
+            payload['bbox'] = self.bbox
+
+        url = "{url}/stac_management/stac/search".format(url=URL)
         
         try:
-            response = requests.get(url, params=payload)
+            response = requests.post(url, json=payload, headers=headers)
         except Exception:
             self.error_signal.emit()
             return
